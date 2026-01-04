@@ -21,6 +21,7 @@
         .input-classic { width: 100%; padding: 0.65rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; transition: all 0.2s; background-color: #fff; }
         .input-classic:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         .label-classic { display: block; font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; margin-bottom: 0.25rem; }
+        
         /* Estilos Carnet */
         .pro-card { width: 320px; height: 500px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 20px; position: relative; overflow: hidden; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); font-family: 'Inter', sans-serif; border: 1px solid rgba(255,255,255,0.1); }
         .pro-card::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.1) 1px, transparent 1px), radial-gradient(circle at 90% 90%, rgba(168, 85, 247, 0.1) 1px, transparent 1px); background-size: 20px 20px; opacity: 0.5; }
@@ -66,6 +67,7 @@
     <main class="flex-1 overflow-auto bg-slate-50/50 p-4 md:p-6 w-full">
         <div class="max-w-7xl mx-auto h-full">
             
+            <!-- SECCIÓN REGISTRO -->
             <section id="tab-registro" class="fade-in grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
                 <div class="lg:col-span-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 overflow-y-auto custom-scrollbar">
                     <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-100">
@@ -144,9 +146,12 @@
                             <div>
                                 <label class="label-classic">Seleccionar Salón / Horario</label>
                                 <div class="relative">
-                                    <select required id="schedule" class="input-classic appearance-none bg-white"></select>
+                                    <select required id="schedule" class="input-classic appearance-none bg-white font-medium text-slate-700">
+                                        <!-- Se llena dinámicamente -->
+                                    </select>
                                     <i data-lucide="chevron-down" class="absolute right-3 top-3 text-slate-400 w-4 h-4 pointer-events-none"></i>
                                 </div>
+                                <p class="text-[10px] text-slate-400 mt-1">* Se muestran solo horarios con vacantes disponibles.</p>
                             </div>
                         </div>
                         <div class="pt-4">
@@ -159,7 +164,7 @@
 
                 <div class="lg:col-span-4 space-y-6 flex flex-col h-full overflow-hidden">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 shrink-0">
-                        <h3 class="text-sm font-bold text-slate-800 mb-4 uppercase tracking-wide">Cupos</h3>
+                        <h3 class="text-sm font-bold text-slate-800 mb-4 uppercase tracking-wide">Cupos Generales</h3>
                         <div id="quota-container" class="space-y-3"></div>
                     </div>
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col flex-1 min-h-0">
@@ -168,26 +173,34 @@
                         </h3>
                         <div class="relative mb-3 shrink-0">
                             <i data-lucide="search" class="absolute left-3 top-2.5 text-slate-400 w-4 h-4"></i>
-                            <input id="search-input" onkeyup="renderStudentList()" placeholder="Buscar..." class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:ring-2 focus:ring-blue-100 outline-none">
+                            <input id="search-input" onkeyup="renderStudentList()" placeholder="Buscar alumno..." class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:ring-2 focus:ring-blue-100 outline-none">
                         </div>
                         <div id="student-list" class="flex-1 overflow-y-auto pr-1 space-y-2 custom-scrollbar"></div>
                     </div>
                 </div>
             </section>
 
+            <!-- SECCIÓN AULAS (CON GESTIÓN) -->
             <section id="tab-salones" class="hidden fade-in h-full flex flex-col gap-6">
-                <div class="flex justify-center mb-2 shrink-0">
-                    <div class="bg-white p-1.5 rounded-xl shadow-sm border border-slate-200 inline-flex gap-1">
-                        <button onclick="filterClassrooms('GRUPAL')" id="filter-grupal" class="px-6 py-2 rounded-lg text-sm font-bold transition-all bg-blue-50 text-blue-700 border border-blue-100">Grupales</button>
-                        <button onclick="filterClassrooms('INDIVIDUAL')" id="filter-individual" class="px-6 py-2 rounded-lg text-sm font-bold transition-all text-slate-500 hover:bg-slate-50 border border-transparent">Individuales</button>
+                <div class="flex justify-between items-center mb-2 shrink-0 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+                    <div class="inline-flex gap-1">
+                        <button onclick="filterClassrooms('GRUPAL')" id="filter-grupal" class="px-4 py-2 rounded-lg text-sm font-bold transition-all bg-blue-50 text-blue-700 border border-blue-100">Grupales</button>
+                        <button onclick="filterClassrooms('INDIVIDUAL')" id="filter-individual" class="px-4 py-2 rounded-lg text-sm font-bold transition-all text-slate-500 hover:bg-slate-50 border border-transparent">Individuales</button>
                     </div>
+                    <button onclick="openClassroomModal()" class="px-4 py-2 rounded-lg text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-2 transition-colors shadow-md shadow-emerald-500/20">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i> Nuevo Salón
+                    </button>
                 </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1 min-h-0">
+                    <!-- Lista de Salones -->
                     <div id="classroom-list" class="md:col-span-1 space-y-3 overflow-y-auto pr-2 custom-scrollbar pb-10"></div>
+                    
+                    <!-- Detalle del Salón -->
                     <div class="md:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col h-full overflow-hidden relative">
                         <div id="classroom-detail-empty" class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 z-0">
                             <i data-lucide="calendar-days" class="w-20 h-20 mb-4 opacity-50"></i>
-                            <p class="font-medium">Selecciona un aula para gestionar</p>
+                            <p class="font-medium">Selecciona un aula para ver el detalle</p>
                         </div>
                         <div id="classroom-detail-content" class="hidden flex flex-col h-full z-10 bg-white">
                             <div class="p-6 border-b border-slate-100 bg-slate-50/50 rounded-t-2xl shrink-0">
@@ -196,11 +209,11 @@
                                         <h2 id="detail-name" class="text-2xl font-bold text-slate-800"></h2>
                                         <div class="flex items-center gap-2 mt-1">
                                             <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                            <span class="text-xs text-slate-500 font-medium">Clase Activa</span>
+                                            <span class="text-xs text-slate-500 font-medium" id="detail-schedule-display">Horario...</span>
                                         </div>
                                     </div>
                                     <a id="detail-meet-btn" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-emerald-500/20 text-sm transition-transform active:scale-95">
-                                        <i data-lucide="video" class="w-4 h-4"></i> INICIAR REUNIÓN
+                                        <i data-lucide="video" class="w-4 h-4"></i> UNIRSE
                                     </a>
                                 </div>
                                 <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg p-2 mb-4 shadow-sm">
@@ -221,18 +234,19 @@
                                         <tr>
                                             <th class="px-6 py-3 border-b border-slate-100 text-[10px] font-bold text-slate-400 uppercase">Alumno</th>
                                             <th class="px-6 py-3 border-b border-slate-100 text-[10px] font-bold text-slate-400 uppercase text-center">Estado</th>
-                                            <th class="px-6 py-3 border-b border-slate-100 text-[10px] font-bold text-slate-400 uppercase text-right">Acciones</th>
+                                            <th class="px-6 py-3 border-b border-slate-100 text-[10px] font-bold text-slate-400 uppercase text-right">Asistencia</th>
                                         </tr>
                                     </thead>
                                     <tbody id="attendance-tbody" class="divide-y divide-slate-50"></tbody>
                                 </table>
-                                <div id="no-students-msg" class="text-center py-12 text-slate-400 text-sm hidden">Sin alumnos.</div>
+                                <div id="no-students-msg" class="text-center py-12 text-slate-400 text-sm hidden">Sin alumnos inscritos.</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
+            <!-- SECCIÓN FINANZAS -->
             <section id="tab-finanzas" class="hidden fade-in grid grid-cols-1 lg:grid-cols-2 gap-6 h-full overflow-y-auto">
                  <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                     <h3 class="text-lg font-bold text-slate-800 mb-8 flex items-center gap-2">
@@ -267,6 +281,7 @@
         </div>
     </main>
 
+    <!-- MODAL CARNET -->
     <div id="card-modal" class="hidden fixed inset-0 bg-slate-900/80 flex items-center justify-center z-[60] p-4 backdrop-blur-sm transition-opacity" onclick="closeModal()">
         <div class="relative transform transition-all scale-100" onclick="event.stopPropagation()">
             <button onclick="closeModal()" class="absolute -top-10 right-0 text-white hover:text-slate-200 transition-colors"><i data-lucide="x" class="w-8 h-8"></i></button>
@@ -306,11 +321,46 @@
         </div>
     </div>
 
+    <!-- MODAL NUEVO SALÓN -->
+    <div id="modal-classroom" class="hidden fixed inset-0 bg-slate-900/60 flex items-center justify-center z-[70] p-4 backdrop-blur-sm" onclick="closeClassroomModal()">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-bounce-in" onclick="event.stopPropagation()">
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="font-bold text-slate-800 flex items-center gap-2"><i data-lucide="plus-circle" class="w-5 h-5 text-emerald-600"></i> Nuevo Salón/Horario</h3>
+                <button onclick="closeClassroomModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="classroomForm" class="p-6 space-y-4">
+                <div>
+                    <label class="label-classic">Nombre del Salón</label>
+                    <input required id="cls-name" placeholder="Ej: Básico 1 - G2" class="input-classic">
+                </div>
+                <div>
+                    <label class="label-classic">Modalidad</label>
+                    <select id="cls-type" class="input-classic bg-slate-50">
+                        <option value="GRUPAL">GRUPAL</option>
+                        <option value="INDIVIDUAL">INDIVIDUAL</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="label-classic">Horario (Texto)</label>
+                    <input required id="cls-schedule" placeholder="Ej: Mar y Jue (18:00 - 19:30)" class="input-classic">
+                    <p class="text-[10px] text-slate-400 mt-1">Este texto aparecerá en las opciones de registro.</p>
+                </div>
+                <div>
+                    <label class="label-classic">Link de Meet (Opcional)</label>
+                    <input id="cls-link" placeholder="https://meet.google.com/..." class="input-classic">
+                </div>
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-3 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-500/20">Crear Salón</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // --- TU CONFIGURACIÓN DE FIREBASE (YA PEGADA) ---
+        // CONFIGURACIÓN DE FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyB_JqJuavM7TBvnuWtFW55wxqFSWMxrk3Q",
             authDomain: "nexus-chess-base-general.firebaseapp.com",
@@ -321,12 +371,11 @@
             appId: "1:521727118362:web:0ac3549eec2a67009595a3",
             measurementId: "G-44QJGQQ2FC"
         };
-        // ----------------------------------------------
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // VARIABLES GLOBALES
+        // VARIABLES
         window.students = [];
         window.classrooms = [];
         window.attendanceData = {};
@@ -354,7 +403,7 @@
             { id: 'I-CL9', name: 'Clase Individual 9', type: 'INDIVIDUAL', schedule: 'Sábado (16:30 - 17:30)', enrolled: [], meetLink: '' }
         ];
 
-        // --- CONEXIÓN FIREBASE EN TIEMPO REAL ---
+        // --- CONEXIÓN FIREBASE ---
         const dbRef = ref(db, 'academy_v1');
         
         onValue(dbRef, (snapshot) => {
@@ -462,14 +511,34 @@
             }
         }
 
+        // --- GESTIÓN DE HORARIOS EN REGISTRO ---
         window.updateScheduleOptions = function() {
             const select = document.getElementById('schedule');
             select.innerHTML = '';
-            const schedules = [...new Set(window.classrooms.filter(c => c.type === window.currentModality).map(c => c.schedule))];
-            schedules.forEach(s => {
-                const opt = document.createElement('option');
-                opt.value = s; opt.innerText = s;
-                select.appendChild(opt);
+            
+            // Filtramos salones por modalidad
+            const filtered = window.classrooms.filter(c => c.type === window.currentModality);
+            
+            // Obtenemos horarios únicos
+            const uniqueSchedules = [...new Set(filtered.map(c => c.schedule))];
+            
+            if(uniqueSchedules.length === 0) {
+                 const opt = document.createElement('option');
+                 opt.innerText = "No hay horarios disponibles";
+                 select.appendChild(opt);
+                 return;
+            }
+
+            uniqueSchedules.forEach(sch => {
+                // Verificar si hay al menos un salón con este horario que tenga cupo
+                const hasSpace = filtered.some(c => c.schedule === sch && (c.enrolled || []).length < QUOTAS[c.type].classCapacity);
+                
+                if (hasSpace) {
+                    const opt = document.createElement('option');
+                    opt.value = sch; 
+                    opt.innerText = sch;
+                    select.appendChild(opt);
+                }
             });
         }
 
@@ -498,6 +567,7 @@
             document.getElementById('age').value = age;
         }
 
+        // --- MANEJO DE REGISTRO ---
         document.getElementById('registrationForm').onsubmit = function(e) {
             e.preventDefault();
             const formData = {
@@ -528,9 +598,13 @@
             calculateCounts();
             const max = QUOTAS[data.modality][data.hasDiscount ? 'discount' : 'regular'];
             const key = data.modality === 'GRUPAL' ? (data.hasDiscount ? 'grupalDiscount' : 'grupalRegular') : (data.hasDiscount ? 'individualDiscount' : 'individualRegular');
-            if(counts[key] >= max) { alert("No hay cupos disponibles."); return; }
-            const clsIndex = classrooms.findIndex(c => c.type === data.modality && c.schedule === data.schedule && c.enrolled.length < QUOTAS[data.modality].classCapacity);
-            if (clsIndex === -1) { alert("No hay salón disponible en ese horario."); return; }
+            
+            if(counts[key] >= max) { alert("¡Alerta de Cupos! Se ha alcanzado el límite para esta categoría."); return; }
+            
+            // Buscar salón disponible con ese horario
+            const clsIndex = classrooms.findIndex(c => c.type === data.modality && c.schedule === data.schedule && (c.enrolled || []).length < QUOTAS[data.modality].classCapacity);
+            
+            if (clsIndex === -1) { alert("Lo sentimos, no hay salones disponibles en este horario específico."); return; }
 
             const discountCode = data.hasDiscount ? `NX-${Math.random().toString(36).substr(2,4).toUpperCase()}` : null;
             const renewalDate = calculateRenewalDate(data.startDate, data.paymentAmount);
@@ -541,9 +615,10 @@
             };
 
             window.students.push(newStudent);
+            if(!window.classrooms[clsIndex].enrolled) window.classrooms[clsIndex].enrolled = [];
             window.classrooms[clsIndex].enrolled.push(newStudent.id);
             saveToFirebase();
-            alert(`Registrado con éxito.`);
+            alert(`Registrado con éxito. Asignado al salón: ${classrooms[clsIndex].name}`);
             resetForm();
         }
 
@@ -594,7 +669,7 @@
             checkAutoLogic();
             setModality(s.modality);
             if(s.hasDiscount !== window.hasDiscount) toggleDiscount();
-            setTimeout(() => { document.getElementById('schedule').value = s.schedule; }, 0);
+            setTimeout(() => { document.getElementById('schedule').value = s.schedule; }, 100);
             document.getElementById('form-title').innerHTML = '<div class="p-1.5 bg-orange-50 rounded text-orange-500"><i data-lucide="edit-3" class="w-5 h-5"></i></div> Editar Alumno';
             document.getElementById('btn-submit').innerHTML = '<i data-lucide="refresh-cw" class="w-5 h-5"></i> GUARDAR CAMBIOS';
             document.getElementById('btn-submit').className = "w-full py-3.5 rounded-xl font-bold text-white shadow-lg shadow-orange-500/30 transform active:scale-[0.98] transition-all bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 flex items-center justify-center gap-2";
@@ -653,6 +728,7 @@
             lucide.createIcons();
         }
 
+        // --- FUNCIONES NUEVAS PARA GESTIÓN DE AULAS ---
         window.filterClassrooms = function(type) {
             window.classroomViewFilter = type;
             document.getElementById('filter-grupal').className = `px-6 py-2 rounded-lg text-sm font-bold transition-all ${type === 'GRUPAL' ? 'bg-blue-50 text-blue-700 border border-blue-100' : 'text-slate-500 hover:bg-slate-50 border border-transparent'}`;
@@ -667,19 +743,80 @@
             const list = document.getElementById('classroom-list');
             list.innerHTML = '';
             window.classrooms.filter(c => c.type === classroomViewFilter).forEach(c => {
-                const isFull = c.enrolled.length >= QUOTAS[c.type].classCapacity;
+                const enrolledCount = (c.enrolled || []).length;
+                const isFull = enrolledCount >= QUOTAS[c.type].classCapacity;
                 const isSelected = selectedClassroomId === c.id;
                 const div = document.createElement('div');
-                div.className = `p-4 rounded-xl border cursor-pointer transition-all ${isSelected ? 'border-blue-500 bg-blue-50/50 shadow-md ring-1 ring-blue-500' : 'border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm'}`;
-                div.onclick = () => selectClassroom(c.id);
+                div.className = `p-4 rounded-xl border cursor-pointer transition-all group relative ${isSelected ? 'border-blue-500 bg-blue-50/50 shadow-md ring-1 ring-blue-500' : 'border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm'}`;
+                
+                // Botón de eliminar (solo visible en hover)
+                const deleteBtn = `<button onclick="deleteClassroom('${c.id}', event)" class="absolute top-2 right-2 p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100" title="Eliminar Salón"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`;
+
                 div.innerHTML = `
-                    <div class="flex justify-between items-start mb-2"><h3 class="font-bold text-slate-700 text-sm leading-tight">${c.name}</h3><span class="text-[10px] font-mono bg-slate-100 px-1.5 py-0.5 rounded text-slate-500">${c.id}</span></div>
-                    <div class="flex items-center gap-1.5 text-xs text-slate-500 mb-3"><i data-lucide="clock" class="w-3 h-3"></i><span>${c.schedule}</span></div>
-                    <div class="flex justify-between items-center text-[10px] font-bold"><span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">${c.enrolled.length} Inscritos</span>${isFull ? '<span class="text-red-500">LLENO</span>' : ''}</div>
+                    <div onclick="selectClassroom('${c.id}')">
+                        <div class="flex justify-between items-start mb-2 pr-6"><h3 class="font-bold text-slate-700 text-sm leading-tight">${c.name}</h3></div>
+                        <div class="flex items-center gap-1.5 text-xs text-slate-500 mb-3"><i data-lucide="clock" class="w-3 h-3"></i><span>${c.schedule}</span></div>
+                        <div class="flex justify-between items-center text-[10px] font-bold"><span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">${enrolledCount} Inscritos</span>${isFull ? '<span class="text-red-500">LLENO</span>' : ''}</div>
+                    </div>
+                    ${deleteBtn}
                 `;
                 list.appendChild(div);
             });
             lucide.createIcons();
+        }
+
+        window.openClassroomModal = function() {
+            document.getElementById('modal-classroom').classList.remove('hidden');
+            document.getElementById('modal-classroom').classList.add('flex');
+            document.getElementById('classroomForm').reset();
+            document.getElementById('cls-type').value = window.classroomViewFilter;
+        }
+
+        window.closeClassroomModal = function() {
+            document.getElementById('modal-classroom').classList.add('hidden');
+            document.getElementById('modal-classroom').classList.remove('flex');
+        }
+
+        document.getElementById('classroomForm').onsubmit = function(e) {
+            e.preventDefault();
+            const name = document.getElementById('cls-name').value;
+            const type = document.getElementById('cls-type').value;
+            const schedule = document.getElementById('cls-schedule').value;
+            const link = document.getElementById('cls-link').value;
+
+            const newClassroom = {
+                id: type.charAt(0) + '-' + Date.now().toString().slice(-6),
+                name: name,
+                type: type,
+                schedule: schedule,
+                enrolled: [],
+                meetLink: link
+            };
+
+            window.classrooms.push(newClassroom);
+            saveToFirebase();
+            closeClassroomModal();
+            refreshAllUI();
+            alert("Nuevo salón creado correctamente.");
+        }
+
+        window.deleteClassroom = function(id, event) {
+            event.stopPropagation();
+            const cls = window.classrooms.find(c => c.id === id);
+            if((cls.enrolled || []).length > 0) {
+                alert("No puedes eliminar un salón que tiene alumnos inscritos.");
+                return;
+            }
+            if(confirm(`¿Estás seguro de eliminar el salón "${cls.name}"?`)) {
+                window.classrooms = window.classrooms.filter(c => c.id !== id);
+                if(selectedClassroomId === id) {
+                    selectedClassroomId = null;
+                    document.getElementById('classroom-detail-empty').classList.remove('hidden');
+                    document.getElementById('classroom-detail-content').classList.add('hidden');
+                }
+                saveToFirebase();
+                refreshAllUI();
+            }
         }
 
         window.selectClassroom = function(id) {
@@ -689,6 +826,7 @@
             document.getElementById('classroom-detail-empty').classList.add('hidden');
             document.getElementById('classroom-detail-content').classList.remove('hidden');
             document.getElementById('detail-name').innerText = cls.name;
+            document.getElementById('detail-schedule-display').innerText = cls.schedule;
             document.getElementById('detail-meet-btn').href = cls.meetLink || '#';
             document.getElementById('detail-link-input').value = cls.meetLink || '';
             renderAttendanceTable();
@@ -708,7 +846,7 @@
         window.renderAttendanceTable = function() {
             if(!selectedClassroomId) return;
             const cls = classrooms.find(c => c.id === selectedClassroomId);
-            const classStudents = students.filter(s => cls.enrolled.includes(s.id));
+            const classStudents = students.filter(s => (cls.enrolled || []).includes(s.id));
             const tbody = document.getElementById('attendance-tbody');
             tbody.innerHTML = '';
             const date = document.getElementById('attendance-date').value;
