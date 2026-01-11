@@ -30,6 +30,11 @@
         .card-chip::after { content: ''; position: absolute; inset: 0; border: 1px solid rgba(0,0,0,0.3); border-radius: 6px; background: repeating-linear-gradient(90deg, transparent 0, transparent 10px, rgba(0,0,0,0.1) 10px, rgba(0,0,0,0.1) 11px); }
         .hologram-strip { position: absolute; bottom: 85px; right: -20px; width: 150px; height: 150px; background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%); transform: rotate(-45deg); pointer-events: none; }
         .qr-placeholder { width: 60px; height: 60px; background: white; padding: 4px; border-radius: 8px; }
+        
+        /* Status Badges */
+        .status-badge { padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+        .status-active { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+        .status-inactive { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
     </style>
 </head>
 <body class="text-slate-800 h-screen flex flex-col overflow-hidden relative">
@@ -50,15 +55,18 @@
                     <span class="text-xs text-slate-500 font-medium">Panel de Administración</span>
                 </div>
             </div>
-            <nav class="flex p-1 bg-gray-100 rounded-xl">
-                <button onclick="switchTab('registro')" id="btn-registro" class="px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all bg-white text-blue-700 shadow-sm">
+            <nav class="flex p-1 bg-gray-100 rounded-xl overflow-x-auto max-w-full">
+                <button onclick="switchTab('registro')" id="btn-registro" class="whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all bg-white text-blue-700 shadow-sm">
                     <i data-lucide="user-plus" class="w-4 h-4"></i> Registro
                 </button>
-                <button onclick="switchTab('salones')" id="btn-salones" class="px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all text-slate-500 hover:text-slate-700">
+                <button onclick="switchTab('salones')" id="btn-salones" class="whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all text-slate-500 hover:text-slate-700">
                     <i data-lucide="clipboard-list" class="w-4 h-4"></i> Aulas
                 </button>
-                <button onclick="switchTab('finanzas')" id="btn-finanzas" class="px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all text-slate-500 hover:text-slate-700">
+                <button onclick="switchTab('finanzas')" id="btn-finanzas" class="whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all text-slate-500 hover:text-slate-700">
                     <i data-lucide="bar-chart-3" class="w-4 h-4"></i> Finanzas
+                </button>
+                <button onclick="switchTab('database')" id="btn-database" class="whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all text-slate-500 hover:text-slate-700">
+                    <i data-lucide="database" class="w-4 h-4"></i> Base de Datos
                 </button>
             </nav>
         </div>
@@ -67,6 +75,7 @@
     <main class="flex-1 overflow-auto bg-slate-50/50 p-4 md:p-6 w-full">
         <div class="max-w-7xl mx-auto h-full">
             
+            <!-- TAB REGISTRO -->
             <section id="tab-registro" class="fade-in grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
                 <div class="lg:col-span-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 overflow-y-auto custom-scrollbar">
                     <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-100">
@@ -174,19 +183,20 @@
                         <h3 class="text-sm font-bold text-slate-800 mb-4 uppercase tracking-wide">Cupos Generales</h3>
                         <div id="quota-container" class="space-y-3"></div>
                     </div>
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col flex-1 min-h-0">
-                        <h3 class="text-sm font-bold text-slate-800 mb-4 uppercase tracking-wide flex justify-between items-center">
-                            Directorio <span class="bg-blue-100 text-blue-700 text-[10px] px-2 py-0.5 rounded-full" id="student-count">0</span>
-                        </h3>
-                        <div class="relative mb-3 shrink-0">
-                            <i data-lucide="search" class="absolute left-3 top-2.5 text-slate-400 w-4 h-4"></i>
-                            <input id="search-input" onkeyup="renderStudentList()" placeholder="Buscar alumno..." class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:ring-2 focus:ring-blue-100 outline-none">
+                    
+                    <!-- Widget informativo -->
+                    <div class="bg-gradient-to-br from-indigo-600 to-blue-700 p-5 rounded-2xl shadow-lg text-white flex-1 flex flex-col justify-center items-center text-center">
+                        <div class="mb-4 bg-white/20 p-3 rounded-full backdrop-blur-sm">
+                            <i data-lucide="database" class="w-8 h-8 text-white"></i>
                         </div>
-                        <div id="student-list" class="flex-1 overflow-y-auto pr-1 space-y-2 custom-scrollbar"></div>
+                        <h3 class="text-lg font-bold mb-2">Base de Datos Centralizada</h3>
+                        <p class="text-sm text-blue-100 leading-relaxed mb-4">Gestiona, busca y administra todos los alumnos desde la nueva pestaña "Base de Datos".</p>
+                        <button onclick="switchTab('database')" class="bg-white text-blue-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-50 transition-colors shadow-sm">Ir a Base de Datos</button>
                     </div>
                 </div>
             </section>
 
+            <!-- TAB SALONES -->
             <section id="tab-salones" class="hidden fade-in h-full flex flex-col gap-6">
                 <div class="flex justify-between items-center mb-2 shrink-0 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
                     <div class="inline-flex gap-1">
@@ -250,40 +260,124 @@
                 </div>
             </section>
 
+            <!-- TAB FINANZAS -->
             <section id="tab-finanzas" class="hidden fade-in grid grid-cols-1 lg:grid-cols-2 gap-6 h-full overflow-y-auto">
-                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-lg font-bold text-slate-800 mb-8 flex items-center gap-2">
-                        <div class="p-1.5 bg-emerald-50 rounded text-emerald-600"><i data-lucide="trending-up" class="w-5 h-5"></i></div>
-                        Reporte de Ingresos
-                    </h3>
-                    <div class="text-center mb-8">
-                        <span class="text-sm text-slate-400 font-medium">Total Recaudado</span>
-                        <div class="text-4xl font-black text-slate-800 mt-1">S/. <span id="total-earnings">0.00</span></div>
-                    </div>
-                    <div class="h-48 flex items-end justify-around pb-0 border-b border-slate-100 gap-8 px-8">
-                        <div class="flex flex-col items-center w-full group cursor-default">
-                            <div id="grupal-earnings-text" class="text-xs font-bold text-blue-600 mb-2 opacity-0 group-hover:opacity-100 transition-opacity">S/. 0</div>
-                            <div id="grupal-bar" class="w-full max-w-[60px] bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg shadow-lg shadow-blue-200 transition-all duration-700" style="height: 4px;"></div>
-                            <div class="mt-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Grupal</div>
+                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col gap-6">
+                    <!-- Ingresos Totales -->
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-8 flex items-center gap-2">
+                            <div class="p-1.5 bg-emerald-50 rounded text-emerald-600"><i data-lucide="trending-up" class="w-5 h-5"></i></div>
+                            Reporte de Ingresos
+                        </h3>
+                        <div class="text-center mb-8">
+                            <span class="text-sm text-slate-400 font-medium">Total Recaudado (Histórico)</span>
+                            <div class="text-4xl font-black text-slate-800 mt-1">S/. <span id="total-earnings">0.00</span></div>
                         </div>
-                        <div class="flex flex-col items-center w-full group cursor-default">
-                            <div id="indiv-earnings-text" class="text-xs font-bold text-indigo-600 mb-2 opacity-0 group-hover:opacity-100 transition-opacity">S/. 0</div>
-                            <div id="indiv-bar" class="w-full max-w-[60px] bg-gradient-to-t from-indigo-600 to-indigo-400 rounded-t-lg shadow-lg shadow-indigo-200 transition-all duration-700" style="height: 4px;"></div>
-                            <div class="mt-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Individual</div>
+                        <div class="h-48 flex items-end justify-around pb-0 border-b border-slate-100 gap-8 px-8">
+                            <div class="flex flex-col items-center w-full group cursor-default">
+                                <div id="grupal-earnings-text" class="text-xs font-bold text-blue-600 mb-2 opacity-0 group-hover:opacity-100 transition-opacity">S/. 0</div>
+                                <div id="grupal-bar" class="w-full max-w-[60px] bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg shadow-lg shadow-blue-200 transition-all duration-700" style="height: 4px;"></div>
+                                <div class="mt-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Grupal</div>
+                            </div>
+                            <div class="flex flex-col items-center w-full group cursor-default">
+                                <div id="indiv-earnings-text" class="text-xs font-bold text-indigo-600 mb-2 opacity-0 group-hover:opacity-100 transition-opacity">S/. 0</div>
+                                <div id="indiv-bar" class="w-full max-w-[60px] bg-gradient-to-t from-indigo-600 to-indigo-400 rounded-t-lg shadow-lg shadow-indigo-200 transition-all duration-700" style="height: 4px;"></div>
+                                <div class="mt-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Individual</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col">
-                    <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                        <div class="p-1.5 bg-red-50 rounded text-red-500"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
-                        Análisis Demográfico
-                    </h3>
-                    <div id="market-list" class="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar"></div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col gap-8">
+                    <!-- Análisis Demográfico -->
+                    <div class="flex flex-col flex-1 min-h-0 max-h-[50%]">
+                        <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <div class="p-1.5 bg-red-50 rounded text-red-500"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
+                            Análisis Demográfico
+                        </h3>
+                        <div id="market-list" class="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar"></div>
+                    </div>
+                    
+                    <!-- Cierre Mensual -->
+                    <div class="flex flex-col flex-1 min-h-0 border-t border-slate-100 pt-6">
+                         <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <div class="p-1.5 bg-emerald-50 rounded text-emerald-600"><i data-lucide="calendar-check" class="w-5 h-5"></i></div>
+                            Cierre Mensual
+                        </h3>
+                        <div id="monthly-list" class="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB BASE DE DATOS (NUEVO) -->
+            <section id="tab-database" class="hidden fade-in h-full flex flex-col">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col h-full">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <div class="p-1.5 bg-indigo-50 rounded text-indigo-600"><i data-lucide="database" class="w-5 h-5"></i></div>
+                            Base de Datos de Alumnos
+                        </h3>
+                        <div class="relative w-full md:w-96">
+                            <i data-lucide="search" class="absolute left-3 top-2.5 text-slate-400 w-4 h-4"></i>
+                            <input id="db-search" onkeyup="renderStudentDatabase()" placeholder="Buscar por Nombre, Apellido o Código..." class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:ring-2 focus:ring-indigo-100 outline-none">
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 overflow-auto border border-slate-200 rounded-xl">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-slate-50 sticky top-0 z-10">
+                                <tr>
+                                    <th class="px-4 py-3 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase">Estado</th>
+                                    <th class="px-4 py-3 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase">Alumno / Código</th>
+                                    <th class="px-4 py-3 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase">Salón</th>
+                                    <th class="px-4 py-3 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase">Vencimiento / Pass</th>
+                                    <th class="px-4 py-3 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase text-right">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="db-tbody" class="divide-y divide-slate-100 bg-white"></tbody>
+                        </table>
+                        <div id="db-empty" class="hidden flex flex-col items-center justify-center py-12 text-slate-400">
+                            <i data-lucide="search-x" class="w-10 h-10 mb-2 opacity-50"></i>
+                            <p class="text-sm">No se encontraron alumnos.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-xs text-slate-400 flex justify-between items-center">
+                        <span>Mostrando <span id="db-count" class="font-bold text-slate-700">0</span> resultados</span>
+                        <div class="flex gap-2">
+                             <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> Activo</div>
+                             <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span> Inactivo</div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
     </main>
 
+    <!-- Modal de Renovación -->
+    <div id="modal-renew" class="hidden fixed inset-0 bg-slate-900/60 flex items-center justify-center z-[70] p-4 backdrop-blur-sm" onclick="closeRenewModal()">
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden animate-bounce-in" onclick="event.stopPropagation()">
+            <div class="bg-emerald-600 px-6 py-4 flex justify-between items-center">
+                <h3 class="font-bold text-white flex items-center gap-2"><i data-lucide="refresh-ccw" class="w-5 h-5"></i> Renovar Suscripción</h3>
+                <button onclick="closeRenewModal()" class="text-white/80 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <input type="hidden" id="renew-student-id">
+                <p class="text-sm text-slate-600">Registrar nuevo pago para: <strong id="renew-student-name"></strong></p>
+                <div>
+                    <label class="label-classic">Nuevo Monto (S/.)</label>
+                    <input type="number" id="renew-amount" class="input-classic font-bold text-emerald-600" placeholder="0.00">
+                </div>
+                 <div>
+                    <label class="label-classic">Nueva Fecha de Inicio</label>
+                    <input type="date" id="renew-date" class="input-classic">
+                    <p class="text-[10px] text-slate-400 mt-1">La fecha de vencimiento se calculará automáticamente desde aquí.</p>
+                </div>
+                <button onclick="confirmRenewal()" class="w-full py-3 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-500/20">Confirmar Pago</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Carnet (Mantenido igual) -->
     <div id="card-modal" class="hidden fixed inset-0 bg-slate-900/80 flex items-center justify-center z-[60] p-4 backdrop-blur-sm transition-opacity" onclick="closeModal()">
         <div class="relative transform transition-all scale-100" onclick="event.stopPropagation()">
             <button onclick="closeModal()" class="absolute -top-10 right-0 text-white hover:text-slate-200 transition-colors"><i data-lucide="x" class="w-8 h-8"></i></button>
@@ -323,6 +417,7 @@
         </div>
     </div>
 
+    <!-- Modal Salón -->
     <div id="modal-classroom" class="hidden fixed inset-0 bg-slate-900/60 flex items-center justify-center z-[70] p-4 backdrop-blur-sm" onclick="closeClassroomModal()">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-bounce-in" onclick="event.stopPropagation()">
             <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
@@ -390,18 +485,7 @@
         const INITIAL_CLASSROOMS = [
             { id: 'G-BAS1', name: 'Básico 1 Grupal', type: 'GRUPAL', schedule: 'Lun y Mié (09:00 - 10:00)', enrolled: [], meetLink: 'https://meet.google.com/new' },
             { id: 'G-BAS2', name: 'Básico 2 Grupal', type: 'GRUPAL', schedule: 'Lun y Mié (10:30 - 11:30)', enrolled: [], meetLink: '' },
-            { id: 'G-BAS3', name: 'Básico 3 Grupal', type: 'GRUPAL', schedule: 'Lun y Mié (12:00 - 13:00)', enrolled: [], meetLink: '' },
-            { id: 'G-BAS4', name: 'Básico 4 Grupal', type: 'GRUPAL', schedule: 'Lun y Mié (15:00 - 16:00)', enrolled: [], meetLink: '' },
-            { id: 'G-BAS5', name: 'Básico 5 Grupal', type: 'GRUPAL', schedule: 'Lun y Mié (16:30 - 17:30)', enrolled: [], meetLink: '' },
             { id: 'I-CL1', name: 'Clase Individual 1', type: 'INDIVIDUAL', schedule: 'Mar y Jue (09:00 - 10:00)', enrolled: [], meetLink: '' },
-            { id: 'I-CL2', name: 'Clase Individual 2', type: 'INDIVIDUAL', schedule: 'Mar y Jue (10:30 - 11:30)', enrolled: [], meetLink: '' },
-            { id: 'I-CL3', name: 'Clase Individual 3', type: 'INDIVIDUAL', schedule: 'Mar y Jue (12:00 - 13:00)', enrolled: [], meetLink: '' },
-            { id: 'I-CL4', name: 'Clase Individual 4', type: 'INDIVIDUAL', schedule: 'Mar y Jue (15:00 - 16:00)', enrolled: [], meetLink: '' },
-            { id: 'I-CL5', name: 'Clase Individual 5', type: 'INDIVIDUAL', schedule: 'Mar y Jue (16:30 - 17:30)', enrolled: [], meetLink: '' },
-            { id: 'I-CL6', name: 'Clase Individual 6', type: 'INDIVIDUAL', schedule: 'Sábado (09:00 - 10:00)', enrolled: [], meetLink: '' },
-            { id: 'I-CL7', name: 'Clase Individual 7', type: 'INDIVIDUAL', schedule: 'Sábado (10:30 - 11:30)', enrolled: [], meetLink: '' },
-            { id: 'I-CL8', name: 'Clase Individual 8', type: 'INDIVIDUAL', schedule: 'Sábado (15:00 - 16:00)', enrolled: [], meetLink: '' },
-            { id: 'I-CL9', name: 'Clase Individual 9', type: 'INDIVIDUAL', schedule: 'Sábado (16:30 - 17:30)', enrolled: [], meetLink: '' }
         ];
 
         // --- CONEXIÓN FIREBASE ---
@@ -412,7 +496,14 @@
             document.getElementById('loader').classList.add('hidden');
 
             if (data) {
-                window.students = data.students || [];
+                // Migración de datos antiguos para soportar historial de pagos
+                window.students = (data.students || []).map(s => {
+                    if (!s.payments) {
+                        s.payments = [{ date: s.startDate || s.registrationDate, amount: s.paymentAmount }];
+                    }
+                    if (s.active === undefined) s.active = true; // Por defecto activo
+                    return s;
+                });
                 window.attendanceData = data.attendanceData || {};
                 window.classrooms = data.classrooms || JSON.parse(JSON.stringify(INITIAL_CLASSROOMS));
             } else {
@@ -432,9 +523,9 @@
 
         function refreshAllUI() {
             renderQuotas();
-            renderStudentList();
             renderClassrooms();
             renderAnalytics();
+            renderStudentDatabase(); // Nueva función de tabla
             if(selectedClassroomId) renderAttendanceTable();
             updateScheduleOptions();
         }
@@ -443,7 +534,8 @@
         window.onload = () => {
             initDepartments();
             document.getElementById('attendance-date').valueAsDate = new Date();
-            document.getElementById('startDate').value = "2026-01-05";
+            document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('renew-date').value = new Date().toISOString().split('T')[0];
             lucide.createIcons();
         };
 
@@ -464,6 +556,8 @@
         window.calculateCounts = function() {
             window.counts = { grupalRegular: 0, grupalDiscount: 0, individualRegular: 0, individualDiscount: 0 };
             window.students.forEach(s => {
+                // Solo contar alumnos activos
+                if (!s.active) return;
                 const key = s.modality === 'GRUPAL' ? (s.hasDiscount ? 'grupalDiscount' : 'grupalRegular') : (s.hasDiscount ? 'individualDiscount' : 'individualRegular');
                 window.counts[key]++;
             });
@@ -479,7 +573,7 @@
         }
 
         window.switchTab = function(tabId) {
-            ['registro', 'salones', 'finanzas'].forEach(t => {
+            ['registro', 'salones', 'finanzas', 'database'].forEach(t => {
                 document.getElementById('tab-' + t).classList.add('hidden');
                 document.getElementById('btn-' + t).classList.remove('bg-white', 'text-blue-700', 'shadow-sm', 'border', 'border-slate-200');
                 document.getElementById('btn-' + t).classList.add('text-slate-500', 'hover:text-slate-700');
@@ -488,6 +582,7 @@
             document.getElementById('btn-' + tabId).classList.add('bg-white', 'text-blue-700', 'shadow-sm');
             document.getElementById('btn-' + tabId).classList.remove('text-slate-500', 'hover:text-slate-700');
             if(tabId === 'finanzas') renderAnalytics();
+            if(tabId === 'database') renderStudentDatabase();
         }
 
         window.setModality = function(mod) {
@@ -589,7 +684,7 @@
                 hasDiscount: window.hasDiscount,
                 schedule: document.getElementById('schedule').value,
                 startDate: document.getElementById('startDate').value,
-                recordedClassesLink: document.getElementById('recordedClassesLink').value // NUEVO CAMPO
+                recordedClassesLink: document.getElementById('recordedClassesLink').value
             };
             const editId = document.getElementById('edit-id').value;
             if (editId) handleUpdate({id: parseInt(editId), ...formData});
@@ -603,7 +698,6 @@
             
             if(counts[key] >= max) { alert("¡Alerta de Cupos! Se ha alcanzado el límite para esta categoría."); return; }
             
-            // Buscar salón disponible con ese horario
             const clsIndex = classrooms.findIndex(c => c.type === data.modality && c.schedule === data.schedule && (c.enrolled || []).length < QUOTAS[data.modality].classCapacity);
             
             if (clsIndex === -1) { alert("Lo sentimos, no hay salones disponibles en este horario específico."); return; }
@@ -611,9 +705,14 @@
             const discountCode = data.hasDiscount ? `NX-${Math.random().toString(36).substr(2,4).toUpperCase()}` : null;
             const renewalDate = calculateRenewalDate(data.startDate, data.paymentAmount);
             
+            // Estructura de Pagos: Inicializamos el array de pagos
+            const payments = [{ date: data.startDate, amount: data.paymentAmount }];
+
             const newStudent = { 
                 ...data, id: Date.now(), assignedClassId: classrooms[clsIndex].id, 
-                discountCode, registrationDate: new Date().toLocaleDateString(), renewalDate
+                discountCode, registrationDate: new Date().toLocaleDateString(), renewalDate,
+                active: true, // Nuevo campo de estado
+                payments: payments // Nuevo campo de historial
             };
 
             window.students.push(newStudent);
@@ -626,10 +725,19 @@
 
         function handleUpdate(updatedData) {
             const oldStudent = window.students.find(s => s.id === updatedData.id);
+            // Mantener datos que no están en el formulario
             updatedData.assignedClassId = oldStudent.assignedClassId;
             updatedData.discountCode = oldStudent.discountCode;
             updatedData.registrationDate = oldStudent.registrationDate;
+            updatedData.active = oldStudent.active;
+            updatedData.payments = oldStudent.payments;
             updatedData.renewalDate = calculateRenewalDate(updatedData.startDate, updatedData.paymentAmount);
+            
+            // Actualizar el primer pago si se cambia en edición (opcional, o solo actualizar datos)
+            if(updatedData.payments && updatedData.payments.length > 0) {
+                 updatedData.payments[0].amount = updatedData.paymentAmount; // Actualiza solo el monto referencial del registro
+            }
+
             window.students = window.students.map(s => s.id === updatedData.id ? updatedData : s);
             saveToFirebase();
             alert("Datos actualizados.");
@@ -643,9 +751,9 @@
             document.getElementById('btn-submit').innerHTML = '<i data-lucide="save" class="w-5 h-5"></i> REGISTRAR ALUMNO';
             document.getElementById('btn-submit').className = "w-full py-3.5 rounded-xl font-bold text-white shadow-lg shadow-blue-500/30 transform active:scale-[0.98] transition-all bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 flex items-center justify-center gap-2";
             document.getElementById('btn-cancel-edit').classList.add('hidden');
-            document.getElementById('startDate').value = "2026-01-05";
+            document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
             document.getElementById('duration-preview').innerHTML = "";
-            document.getElementById('recordedClassesLink').value = ""; // LIMPIAR LINK
+            document.getElementById('recordedClassesLink').value = ""; 
             setModality('GRUPAL');
             window.hasDiscount = false; toggleDiscount(); window.hasDiscount = false;
             lucide.createIcons();
@@ -668,8 +776,8 @@
             document.getElementById('dob').value = s.dob;
             document.getElementById('age').value = s.age;
             document.getElementById('department').value = s.department;
-            document.getElementById('startDate').value = s.startDate || "2026-01-05";
-            document.getElementById('recordedClassesLink').value = s.recordedClassesLink || ""; // CARGAR LINK EN EDICIÓN
+            document.getElementById('startDate').value = s.startDate;
+            document.getElementById('recordedClassesLink').value = s.recordedClassesLink || ""; 
             checkAutoLogic();
             setModality(s.modality);
             if(s.hasDiscount !== window.hasDiscount) toggleDiscount();
@@ -679,6 +787,207 @@
             document.getElementById('btn-submit').className = "w-full py-3.5 rounded-xl font-bold text-white shadow-lg shadow-orange-500/30 transform active:scale-[0.98] transition-all bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 flex items-center justify-center gap-2";
             document.getElementById('btn-cancel-edit').classList.remove('hidden');
             switchTab('registro');
+        }
+
+        // --- FUNCIONES DE BASE DE DATOS (NUEVAS) ---
+        window.renderStudentDatabase = function() {
+            const term = document.getElementById('db-search').value.toLowerCase();
+            const tbody = document.getElementById('db-tbody');
+            tbody.innerHTML = '';
+            
+            let filtered = window.students.filter(s => 
+                s.studentName.toLowerCase().includes(term) || 
+                s.studentLastName.toLowerCase().includes(term) ||
+                (s.discountCode && s.discountCode.toLowerCase().includes(term))
+            );
+
+            document.getElementById('db-count').innerText = filtered.length;
+            
+            if(filtered.length === 0) {
+                document.getElementById('db-empty').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('db-empty').classList.add('hidden');
+
+            filtered.forEach(s => {
+                const tr = document.createElement('tr');
+                tr.className = `border-b border-slate-50 hover:bg-slate-50/50 transition-colors ${!s.active ? 'opacity-60 bg-slate-50' : ''}`;
+                
+                // Encontrar nombre del salón
+                const cls = classrooms.find(c => c.id === s.assignedClassId);
+                const clsName = cls ? cls.name : '<span class="text-slate-400 italic">Sin salón</span>';
+                const statusBadge = s.active 
+                    ? '<span class="status-badge status-active">Activo</span>' 
+                    : '<span class="status-badge status-inactive">Inactivo</span>';
+
+                tr.innerHTML = `
+                    <td class="px-4 py-3 align-middle">${statusBadge}</td>
+                    <td class="px-4 py-3 align-middle">
+                        <div class="font-bold text-sm text-slate-700">${s.studentLastName}, ${s.studentName}</div>
+                        <div class="text-[10px] font-mono text-slate-400">${s.discountCode || 'S/C'}</div>
+                    </td>
+                    <td class="px-4 py-3 align-middle"><div class="text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded inline-block">${clsName}</div></td>
+                    <td class="px-4 py-3 align-middle font-mono text-xs font-bold ${s.active ? 'text-blue-600' : 'text-slate-400'}">
+                        ${s.renewalDate || '---'}
+                    </td>
+                    <td class="px-4 py-3 align-middle text-right">
+                        <div class="flex justify-end gap-1">
+                            <button onclick="editStudent(${s.id})" class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors" title="Editar"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                            <button onclick="openRenewModal(${s.id})" class="p-1.5 text-emerald-500 hover:bg-emerald-50 rounded transition-colors" title="Renovar / Pagar"><i data-lucide="credit-card" class="w-4 h-4"></i></button>
+                            <button onclick="toggleStudentStatus(${s.id})" class="p-1.5 ${s.active ? 'text-red-400 hover:text-red-600 hover:bg-red-50' : 'text-green-400 hover:text-green-600 hover:bg-green-50'} rounded transition-colors" title="${s.active ? 'Inhabilitar' : 'Habilitar'}">
+                                <i data-lucide="${s.active ? 'user-x' : 'user-check'}" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="showCard(${s.id})" class="p-1.5 text-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-colors" title="Ver Carnet"><i data-lucide="id-card" class="w-4 h-4"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        }
+
+        window.toggleStudentStatus = function(id) {
+            const s = students.find(st => st.id === id);
+            if(s) {
+                s.active = !s.active;
+                // Si se inhabilita, opcionalmente liberamos cupo del salón? Por ahora solo visual.
+                saveToFirebase();
+                renderStudentDatabase();
+                renderAnalytics(); // Actualizar gráficos
+            }
+        }
+
+        // --- RENOVACIONES ---
+        window.openRenewModal = function(id) {
+            const s = students.find(st => st.id === id);
+            if(!s) return;
+            document.getElementById('renew-student-id').value = s.id;
+            document.getElementById('renew-student-name').innerText = `${s.studentName} ${s.studentLastName}`;
+            document.getElementById('renew-amount').value = ''; 
+            document.getElementById('renew-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('modal-renew').classList.remove('hidden');
+        }
+
+        window.closeRenewModal = function() {
+            document.getElementById('modal-renew').classList.add('hidden');
+        }
+
+        window.confirmRenewal = function() {
+            const id = parseInt(document.getElementById('renew-student-id').value);
+            const amount = parseFloat(document.getElementById('renew-amount').value);
+            const newDate = document.getElementById('renew-date').value;
+            
+            if(!amount || !newDate) { alert("Por favor ingresa monto y fecha."); return; }
+
+            const s = students.find(st => st.id === id);
+            if(s) {
+                // Registrar pago
+                if(!s.payments) s.payments = [];
+                s.payments.push({ date: newDate, amount: amount });
+                
+                // Actualizar vencimiento y estado
+                s.renewalDate = calculateRenewalDate(newDate, amount);
+                s.active = true; // Reactivar si estaba inactivo
+
+                saveToFirebase();
+                closeRenewModal();
+                renderStudentDatabase();
+                renderAnalytics(); // Refrescar gráfico mensual
+                alert(`Pago registrado. Nueva fecha de vencimiento: ${s.renewalDate}`);
+            }
+        }
+
+        // --- DASHBOARD ANALYTICS ACTUALIZADO ---
+        window.renderAnalytics = function() {
+            // Totales acumulados (históricos)
+            let total = 0;
+            let grupal = 0;
+            let indiv = 0;
+
+            // Monthly breakdown map
+            const months = {};
+
+            students.forEach(s => {
+                // Sumar historial de pagos
+                if(s.payments && s.payments.length > 0) {
+                    s.payments.forEach(p => {
+                        total += p.amount;
+                        // Para desglose por tipo, usamos la modalidad actual del alumno (aproximación)
+                        if(s.modality === 'GRUPAL') grupal += p.amount; else indiv += p.amount;
+
+                        // Agrupar por mes (YYYY-MM) para ordenamiento
+                        const d = new Date(p.date);
+                        // Truco para corregir zona horaria en visualización simple
+                        const monthName = d.toLocaleDateString('es-PE', { month: 'long', timeZone: 'UTC' });
+                        const key = `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2, '0')}`; // Clave ordenable
+                        
+                        if(!months[key]) months[key] = { name: monthName, amount: 0, year: d.getFullYear() };
+                        months[key].amount += p.amount;
+                    });
+                } else {
+                    // Fallback para datos antiguos sin array de pagos
+                    total += s.paymentAmount;
+                    if(s.modality === 'GRUPAL') grupal += s.paymentAmount; else indiv += s.paymentAmount;
+                }
+            });
+
+            // Renderizar Barras de Ingresos Totales
+            const max = Math.max(grupal, indiv, 1);
+            document.getElementById('total-earnings').innerText = total.toFixed(2);
+            document.getElementById('grupal-earnings-text').innerText = 'S/. ' + grupal;
+            document.getElementById('indiv-earnings-text').innerText = 'S/. ' + indiv;
+            document.getElementById('grupal-bar').style.height = Math.max(4, (grupal/max)*100) + '%';
+            document.getElementById('indiv-bar').style.height = Math.max(4, (indiv/max)*100) + '%';
+
+            // Renderizar Análisis Demográfico
+            const counts = {};
+            students.forEach(s => { if(s.active) counts[s.department] = (counts[s.department] || 0) + 1 });
+            const sortedMarket = Object.entries(counts).sort(([,a], [,b]) => b - a);
+            const marketList = document.getElementById('market-list');
+            marketList.innerHTML = '';
+            if(sortedMarket.length === 0) marketList.innerHTML = '<p class="text-center text-slate-300 text-xs mt-4">No hay datos activos.</p>';
+            sortedMarket.forEach(([name, count], i) => {
+                const pct = (count / students.filter(s=>s.active).length) * 100;
+                marketList.innerHTML += `
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs mb-1.5 font-medium">
+                            <span class="text-slate-600 flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-slate-100 flex items-center justify-center text-[9px] font-bold text-slate-500">${i+1}</span>${name}</span>
+                            <span class="text-slate-800 font-bold">${count}</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-red-500 h-1.5 rounded-full" style="width: ${pct}%"></div></div>
+                    </div>`;
+            });
+
+            // Renderizar Cierre Mensual (Nuevo)
+            const sortedMonths = Object.keys(months).sort().reverse(); // Mes más reciente primero
+            const monthlyList = document.getElementById('monthly-list');
+            monthlyList.innerHTML = '';
+            
+            // Encontrar el monto máximo mensual para la escala
+            const maxMonthly = Math.max(...Object.values(months).map(m => m.amount), 1);
+
+            if(sortedMonths.length === 0) monthlyList.innerHTML = '<p class="text-center text-slate-300 text-xs mt-4">Sin registro de pagos.</p>';
+            
+            sortedMonths.forEach(key => {
+                const m = months[key];
+                const pct = (m.amount / maxMonthly) * 100;
+                // Capitalizar mes
+                const monthDisplay = m.name.charAt(0).toUpperCase() + m.name.slice(1);
+                
+                monthlyList.innerHTML += `
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs mb-1.5 font-medium">
+                            <span class="text-emerald-700 flex items-center gap-2 font-bold uppercase tracking-wide">
+                                <i data-lucide="calendar" class="w-3 h-3 text-emerald-500"></i> ${monthDisplay} ${m.year}
+                            </span>
+                            <span class="text-slate-800 font-bold">S/. ${m.amount.toFixed(2)}</span>
+                        </div>
+                        <div class="w-full bg-emerald-50 rounded-full h-2 overflow-hidden border border-emerald-100">
+                            <div class="bg-emerald-500 h-2 rounded-full shadow-sm shadow-emerald-200" style="width: ${pct}%"></div>
+                        </div>
+                    </div>`;
+            });
+            lucide.createIcons();
         }
 
         window.renderQuotas = function() {
@@ -707,31 +1016,6 @@
                 makeCard("Individual", QUOTAS.INDIVIDUAL.regular - counts.individualRegular, QUOTAS.INDIVIDUAL.regular, QUOTAS.INDIVIDUAL.discount - counts.individualDiscount, QUOTAS.INDIVIDUAL.discount, 'indigo');
         }
 
-        window.renderStudentList = function() {
-            const term = document.getElementById('search-input').value.toLowerCase();
-            const list = document.getElementById('student-list');
-            list.innerHTML = '';
-            const filtered = window.students.filter(s => s.studentName.toLowerCase().includes(term) || s.studentLastName.toLowerCase().includes(term));
-            document.getElementById('student-count').innerText = filtered.length;
-            if(filtered.length === 0) { list.innerHTML = '<div class="text-center py-8 text-slate-400 text-xs italic">No se encontraron resultados</div>'; return; }
-            filtered.forEach(s => {
-                const el = document.createElement('div');
-                el.className = 'p-3 rounded-xl border border-slate-100 bg-white hover:border-blue-200 hover:shadow-md transition-all flex justify-between items-center group cursor-pointer';
-                el.onclick = () => editStudent(s.id);
-                el.innerHTML = `
-                    <div class="min-w-0 pr-2">
-                        <p class="font-bold text-slate-700 text-sm truncate">${s.studentLastName}, ${s.studentName}</p>
-                        <p class="text-[10px] text-slate-400 truncate font-medium mt-0.5">${s.schedule}</p>
-                    </div>
-                    <div class="flex gap-1">
-                        <button onclick="event.stopPropagation(); showCard(${s.id})" class="p-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors" title="Carnet"><i data-lucide="id-card" class="w-4 h-4"></i></button>
-                    </div>
-                `;
-                list.appendChild(el);
-            });
-            lucide.createIcons();
-        }
-
         // --- FUNCIONES PARA GESTIÓN DE AULAS ---
         window.filterClassrooms = function(type) {
             window.classroomViewFilter = type;
@@ -753,7 +1037,6 @@
                 const div = document.createElement('div');
                 div.className = `p-4 rounded-xl border cursor-pointer transition-all group relative ${isSelected ? 'border-blue-500 bg-blue-50/50 shadow-md ring-1 ring-blue-500' : 'border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm'}`;
                 
-                // Botón de eliminar (solo visible en hover)
                 const deleteBtn = `<button onclick="deleteClassroom('${c.id}', event)" class="absolute top-2 right-2 p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100" title="Eliminar Salón"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`;
 
                 div.innerHTML = `
@@ -850,7 +1133,7 @@
         window.renderAttendanceTable = function() {
             if(!selectedClassroomId) return;
             const cls = classrooms.find(c => c.id === selectedClassroomId);
-            const classStudents = students.filter(s => (cls.enrolled || []).includes(s.id));
+            const classStudents = students.filter(s => (cls.enrolled || []).includes(s.id) && s.active); // Solo mostrar activos
             const tbody = document.getElementById('attendance-tbody');
             tbody.innerHTML = '';
             const date = document.getElementById('attendance-date').value;
@@ -884,35 +1167,6 @@
             window.attendanceData[date][studentId] = status;
             saveToFirebase(); 
             renderAttendanceTable();
-        }
-
-        window.renderAnalytics = function() {
-            const total = students.reduce((acc, s) => acc + s.paymentAmount, 0);
-            const grupal = students.filter(s => s.modality === 'GRUPAL').reduce((acc, s) => acc + s.paymentAmount, 0);
-            const indiv = students.filter(s => s.modality === 'INDIVIDUAL').reduce((acc, s) => acc + s.paymentAmount, 0);
-            const max = Math.max(grupal, indiv, 1);
-            document.getElementById('total-earnings').innerText = total.toFixed(2);
-            document.getElementById('grupal-earnings-text').innerText = 'S/. ' + grupal;
-            document.getElementById('indiv-earnings-text').innerText = 'S/. ' + indiv;
-            document.getElementById('grupal-bar').style.height = Math.max(4, (grupal/max)*100) + '%';
-            document.getElementById('indiv-bar').style.height = Math.max(4, (indiv/max)*100) + '%';
-            const counts = {};
-            students.forEach(s => counts[s.department] = (counts[s.department] || 0) + 1);
-            const sorted = Object.entries(counts).sort(([,a], [,b]) => b - a);
-            const list = document.getElementById('market-list');
-            list.innerHTML = '';
-            if(sorted.length === 0) list.innerHTML = '<p class="text-center text-slate-300 text-xs mt-10">No hay datos registrados aún.</p>';
-            sorted.forEach(([name, count], i) => {
-                const pct = (count / students.length) * 100;
-                list.innerHTML += `
-                    <div class="mb-3">
-                        <div class="flex justify-between text-xs mb-1.5 font-medium">
-                            <span class="text-slate-600 flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-slate-100 flex items-center justify-center text-[9px] font-bold text-slate-500">${i+1}</span>${name}</span>
-                            <span class="text-slate-800 font-bold">${count}</span>
-                        </div>
-                        <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-red-500 h-1.5 rounded-full" style="width: ${pct}%"></div></div>
-                    </div>`;
-            });
         }
 
         window.showCard = function(id) {
